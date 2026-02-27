@@ -1,6 +1,10 @@
 //Nombre: Torres Martinez Victor Manuel
-//Fecha 21/02/26
-//Previo 3: Proyecciones, Transformaciones y Shaders
+//Fecha 23/02/26
+//Practica 3: Proyecciones, Transformaciones y Shaders
+
+//Para la practica es hacer una piramide siguiendo la estructura de clase
+//El numero de cajas es el numero de letras de nombre
+//Victor -> 6 cajas
 
 #include<iostream>
 
@@ -26,10 +30,10 @@ int main() {
 	glfwInit();
 	//Verificaci�n de compatibilidad 
 	// Set all the required options for GLFW
-	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);*/
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
@@ -221,10 +225,11 @@ int main() {
 		ourShader.Use();
 		glm::mat4 model=glm::mat4(1);
 		glm::mat4 view=glm::mat4(1);
-	
-	    view = glm::translate(view, glm::vec3(.0f,-3.0f,-13.0f));
-		model = glm::rotate( model, 0.8f, glm::vec3( 1.0f, 1.0f, 0.0f ) ); // use to compare orthographic and perspective projection
-		model = glm::scale(model, glm::vec3(5.0f, 1.0f, 3.0f));
+		//Vista
+	    view = glm::translate(view, glm::vec3(.0f,-19.0f,-37.0f));
+		//Caja 1
+		model = glm::rotate( model, 0.78f, glm::vec3( 0.0f, 1.0f, 0.0f ) ); // use to compare orthographic and perspective projection
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		//view = glm::translate( view, glm::vec3( screenWidth / 2, screenHeight / 7,-800.0f ) ); // use with orthographic projection
 		
 		GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
@@ -240,27 +245,46 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		
 		//Agregar nuevos elementos
+		//Caja 2
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(5.0f,0.0f,0.0f));
-		model = glm::rotate(model, 1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(5.0f, 1.0f, 3.0f));
+		model = glm::translate(model, glm::vec3(0.5f,1.5f,0.0f));
+		model = glm::rotate(model, 2.7f, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
+		//Caja 3
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f));
-		model = glm::rotate(model, 0.2f, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(2.0f, 1.0f, 5.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.0f));
+		model = glm::rotate(model, 0.2f, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
+		//Caja 4
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-3.0f, 4.0f, 0.0f));
-		model = glm::rotate(model, 2.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 5.0f));
+		model = glm::translate(model, glm::vec3(1.7f, 7.5f, 0.0f));
+		model = glm::rotate(model, 4.14f, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		//Caja 5
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(1.7f, 12.5f, 0.0f));
+		model = glm::rotate(model, 1.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		//Caja 6
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(1.7f, 22.2f, 0.0f));
+		model = glm::rotate(model, 0.78f, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 8.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
 
 		glBindVertexArray(0);
 
