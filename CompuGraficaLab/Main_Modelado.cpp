@@ -1,5 +1,5 @@
 //Nombre: Torres Martinez Victor Manuel
-//Fecha 04/02/26
+//Fecha 04/03/26
 //Practica 4: Modelado Geometrico 
 
 #include<iostream>
