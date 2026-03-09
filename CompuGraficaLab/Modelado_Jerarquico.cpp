@@ -1,7 +1,7 @@
 //Nombre: Torres Martinez Victor Manuel
 //Fecha 08/03/26
 //Previo 5: Modelado Jerarquico
-
+//:)
 #include<iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
