@@ -1,6 +1,6 @@
 //Nombre: Torres Martinez Victor Manuel
-//Fecha 14/03/26
-//Previo 6: Carga de Modelos
+//Fecha 16/03/26
+//Practica 6: Carga de Modelos
 
 // Std. Includes
 #include <string>
@@ -26,7 +26,7 @@
 #include "stb_image.h"
 
 // Properties
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1500, HEIGHT = 1000;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Function prototypes
@@ -98,8 +98,14 @@ int main( )
     Shader shader( "Shader/modelLoading.vs", "Shader/modelLoading.frag" );
     
     // Load models
-    Model dog((char*)"Models/RedDog.obj");
+    Model dog((char*)"Models/Perro/RedDog.obj");
     Model bonnie((char*)"Models/bonnie/source/bonnnie.obj");
+    Model cuchara((char*)"Models/Cuchara/CucharaGastada.obj");
+    Model fuego((char*)"Models/Fuego/fuego.obj");
+    Model pasto((char*)"Models/Pasto/Pasto.obj");
+    Model pes((char*)"Models/Pes/Pescado.obj");
+    Model sarten((char*)"Models/Sarten/sartenn.obj");
+
     glm::mat4 projection = glm::perspective( camera.GetZoom( ), ( float )SCREEN_WIDTH/( float )SCREEN_HEIGHT, 0.1f, 100.0f );
 
   
@@ -125,24 +131,72 @@ int main( )
         glm::mat4 view = camera.GetViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        //Nombre: Torres Martinez Victor Manuel
+        //Fecha 16/03/26
+        //Practica 6: Carga de Modelos
 
         // Draw the loaded model
         glm::mat4 model(1);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         dog.Draw(shader);
-    //Nombre: Torres Martinez Victor Manuel
-    //Fecha 14/03/26
-    //Previo 6: Carga de Modelos
 
-        model = glm::translate(model,glm::vec3(3.0f,0.0f,0.0f));
-        model = glm::scale(model,glm::vec3(2.0f,1.0f,4.0f));
+        model = glm::translate(model,glm::vec3(-0.1f,-0.2f,0.5f));
+        model = glm::rotate(model, 1.5708f, glm::vec3(-1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model,glm::vec3(0.05f,0.05f,0.05f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        dog.Draw(shader);
+        cuchara.Draw(shader);
+        
+        model = glm::mat4(1.0f);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        model = glm::translate(model, glm::vec3(-0.3f, -0.18f,0.8f));
+        model = glm::rotate(model, glm::radians(120.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::rotate(model, glm::radians(60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        sarten.Draw(shader);
 
-        model = glm::translate(model, glm::vec3(-6.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -0.36f, 0.8f));
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        bonnie.Draw(shader);
+        fuego.Draw(shader);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -0.15f, 0.8f));
+        model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        pes.Draw(shader);
+        model = glm::translate(model, glm::vec3(-0.05f, 0.0f, 0.05f));
+        model = glm::rotate(model, glm::radians(-40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        pes.Draw(shader);
+        model = glm::translate(model, glm::vec3(-0.05f, 0.0f, 0.05f));
+        model = glm::rotate(model, glm::radians(-40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        pes.Draw(shader);
+
+        int size = 5;
+        float spacing = 1.95f;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                model = glm::mat4(1);
+                float x = (i - (size - 1) / 2.0f) * spacing;
+                float z = (j - (size - 1) / 2.0f) * spacing;
+
+                model = glm::translate(model, glm::vec3(x, -2.4f, z));
+
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+                pasto.Draw(shader);
+            }
+        }
+        /*model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.2f, 1.2f, 1.2f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        bonnie.Draw(shader);*/
 
         // Swap the buffers
         glfwSwapBuffers( window );
@@ -176,8 +230,14 @@ void DoMovement( )
     {
         camera.ProcessKeyboard( RIGHT, deltaTime );
     }
-
-   
+    if ( keys[GLFW_KEY_Q])
+    {
+        camera.ProcessKeyboard(UoP, deltaTime);
+    }
+    if ( keys[GLFW_KEY_E])
+    {
+        camera.ProcessKeyboard(DOWN, deltaTime);
+    }
 }
 
 // Is called whenever a key is pressed/released via GLFW

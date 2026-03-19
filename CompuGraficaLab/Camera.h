@@ -16,7 +16,9 @@ enum Camera_Movement
 	FORWARD,
 	BACKWARD,
 	LEFT,
-	RIGHT
+	RIGHT,
+	UoP,
+	DOWN
 };
 
 // Default camera values
@@ -79,6 +81,16 @@ public:
 		if (direction == RIGHT)
 		{
 			this->position += this->right * velocity;
+		}
+		//Camara sube
+		if (direction == UoP)
+		{
+			this->position += this->up * velocity;
+		}
+		//Camara baja
+		if (direction == DOWN)
+		{
+			this->position -= this->up * velocity;
 		}
 	}
 
