@@ -1,6 +1,6 @@
 //Nombre: Torres Martinez Victor Manuel
-//Fecha 21/03/26
-//Previo 7: Texturizado
+//Fecha 27/03/26
+//Practica 7: Texturizado
 
 #include <iostream>
 #include <cmath>
@@ -30,7 +30,7 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos);
 void DoMovement();
 
 // Window dimensions
-const GLuint WIDTH = 1000, HEIGHT = 800;
+const GLuint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Camera
@@ -100,25 +100,56 @@ int main()
 	// Build and compile our shader program Nuebvoooooooooooooooo
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
 	//Nombre: Torres Martinez Victor Manuel
-	//Fecha 21/03/26
-	//Previo 7: Texturizado
-
+	//Fecha 27/03/26
+	//Practica 7: Texturizado
 	// Set up vertex data (and buffer(s)) and attribute pointers
 	GLfloat vertices[] =
 	{
-		// Positions            // Colors              // Texture Coords
-		-0.5f, -0.5f, 0.0f,    1.0f, 1.0f,1.0f,		0.0f,0.0f,
-		0.5f, -0.5f, 0.0f,	   1.0f, 1.0f,1.0f,		0.5f,0.0f,
-		0.5f,  0.5f, 0.0f,     1.0f, 1.0f,1.0f,	    0.5f,0.5f,
-		-0.5f,  0.5f, 0.0f,    1.0f, 1.0f,1.0f,		0.0f,0.5f,
+	//Dado Caras
+	// Frente (Cara Delante Dado)
+		-0.5f, -0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.7500f, 0.3333f, // esq inf izq (izq abajo)
+		 0.5f, -0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    1.0f, 0.3333f, // esq inf derecha (derecha abajo)
+		 0.5f,  0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    1.0f, 0.6666f, // esq sup derecha (derecha arriba)
+		-0.5f,  0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.7500f, 0.6666f, // esq sup izq (iz arriba)
 
+		// Atras (Cara Atrás Dado)
+		-0.5f, -0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.25f, 0.3333f,	// esq inf izq (izq abajo)
+		 0.5f, -0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.5f, 0.3333f,	// esq inf derecha (derecha abajo)
+		 0.5f,  0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.5f, 0.6666f,	// esq sup derecha (derecha arriba)
+		-0.5f,  0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.25f, 0.6666f,	// esq sup izq (iz arriba)
+
+		// Derecha (Cara Der Dado)
+		 0.5f, -0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.5f, 0.6666f,	// esq inf izq (izq abajo)
+		 0.5f, -0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.75f, 0.6666f,	// esq inf derecha (derecha abajo)
+		 0.5f,  0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.75f, 1.0f,		// esq sup derecha (derecha arriba)
+		 0.5f,  0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.5f, 1.0f,		// esq sup izq (iz arriba)
+
+		 // Izquierda (Cara Izq Dado)
+		 -0.5f,  0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.5f, 0.3333f, // esq sup izq (iz arriba)
+		 -0.5f,  0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.75f, 0.3333f, // esq sup derecha (derecha arriba)
+		 -0.5f, -0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.75f, 0.0000f, // esq inf derecha (derecha abajo)
+		 -0.5f, -0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.5f, 0.0000f, // esq inf izq (izq abajo)
+
+		 // Abajo (Cara Abajo Dado)
+		 -0.5f, -0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.0000f, 0.3333f, // esq inf izq (izq abajo)
+		  0.5f, -0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.25f, 0.3333f, // esq inf derecha (derecha abajo)
+		  0.5f, -0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.25f, 0.6666f, // esq sup derecha (derecha arriba)
+		 -0.5f, -0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.0000f, 0.6666f, // esq sup izq (iz arriba)
+
+		 // Arriba (Cara Arriba Dado)
+		 -0.5f,  0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.5f, 0.3333f, // esq inf izq (izq abajo)
+		  0.5f,  0.5f, -0.5f,     1.0f, 1.0f, 1.0f,    0.75f, 0.3333f, // esq inf derecha (derecha abajo)
+		  0.5f,  0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.75f, 0.6666f, // esq sup derecha (derecha arriba)
+		 -0.5f,  0.5f,  0.5f,     1.0f, 1.0f, 1.0f,    0.5f, 0.6666f, // esq sup izq (iz arriba)
 	};
 
-	GLuint indices[] =
-	{  // Note that we start from 0!
-		0,1,3,
-		1,2,3
-	
+	GLuint indices[] = {
+		0, 1, 2,     2, 3, 0,   // Frente
+		4, 5, 6,     6, 7, 4,   // Atrás
+		8, 9, 10,    10, 11, 8, // Derecha
+		12, 13, 14,  14, 15, 12, // Izquierda
+		16, 17, 18,  18, 19, 16, // Abajo
+		20, 21, 22,  22, 23, 20  // Arriba
 	};
 
 	// First, set the container's VAO (and VBO)
@@ -150,22 +181,30 @@ int main()
 	// Load textures
 	GLuint texture1;
 	glGenTextures(1, &texture1);
+	//Link identifier with texture 2D
 	glBindTexture(GL_TEXTURE_2D,texture1);
 	int textureWidth, textureHeight,nrChannels;
+	//FLip the image so that the origin is in the lower left corner
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char *image;
+	//How to use the texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	//Nombre: Torres Martinez Victor Manuel
+	//Fecha 27/03/26
+	//Practica 7: Texturizado
 	// Diffuse map
-	image = stbi_load("images/monte.jpg", &textureWidth, &textureHeight, &nrChannels,0);
+	image = stbi_load("images/gokumonkio.png", &textureWidth, &textureHeight, &nrChannels,0);
+	//Link texture type with identifier
 	glBindTexture(GL_TEXTURE_2D, texture1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	//Convert the texture info in a 2D texture
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	if (image)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -191,7 +230,8 @@ int main()
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		
+		//Turn on lamp shader
 		lampShader.Use();
 		//// Create camera transformations
 		glm::mat4 view;
@@ -205,6 +245,7 @@ int main()
 		GLint projLoc = glGetUniformLocation(lampShader.Program, "projection");
 
 		// Bind diffuse map
+		//Texture ind 0
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
 
@@ -214,7 +255,8 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		// Draw the light object (using light's vertex attributes)
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//Draw objects
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		// Swap the screen buffers
