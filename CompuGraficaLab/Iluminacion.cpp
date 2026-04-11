@@ -1,6 +1,6 @@
 //Nombre: Torres Martinez Victor Manuel
-//Fecha 03/04/26
-//Previo 8: Materiales e iluminacion
+//Fecha 10/04/26
+//Practica 8: Materiales e iluminacion
 
 // Std. Includes
 #include <string>
@@ -24,6 +24,7 @@
 // Other Libs
 #include "SOIL2/SOIL2.h"
 #include "stb_image.h"
+#include "cmath"
 // Properties
 const GLuint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -43,7 +44,8 @@ bool firstMouse = true;
 
 // Light attributes
 // Posicion
-glm::vec3 lightPos(0.5f, 0.5f, 2.5f);
+glm::vec3 lightPos(0.5f, 2.5f, -3.0f);
+glm::vec3 lightPos2(-2.5f, -2.5f, 2.5f);
 float movelightPos = 0.0f;
 //Intercambio durante cada frame
 GLfloat deltaTime = 0.0f;
@@ -51,6 +53,14 @@ GLfloat lastFrame = 0.0f;
 //Rotacion
 float rot = 0.0f;
 bool activanim = false;
+
+//Posiciones de Sol
+float angle = 0.0f;
+float speed = 0.75f;
+float radios = 5.0f;
+float moveLight = 0.0f;
+glm::vec3 sunnPos(0.0f,0.0f, 0.0f);
+
 
 int main()
 {
@@ -108,92 +118,64 @@ int main()
 
 
     // Load models
-    Model red_dog((char*)"Models/bonnie/source/bonnnie.obj");
+    Model red_dog((char*)"Models/Perro/RedDog.obj");
+    
+    Model sol((char*)"Models/ModelSol/Esfera.obj");
+    Model luna((char*)"Models/Luna/Moon.obj");
+                                
+    Model dog((char*)"Models/Perro/RedDog.obj");
+    Model bonnie((char*)"Models/bonnie/source/bonnnie.obj");
+    Model cuchara((char*)"Models/Cuchara/CucharaGastada.obj");
+    Model fuego((char*)"Models/Fuego/fuego.obj");
+    Model pasto((char*)"Models/Pasto/Pasto.obj");
+    Model pes((char*)"Models/Pes/Pescado.obj");
+    Model sarten((char*)"Models/Sarten/sartenn.obj");
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+   
     float vertices[] = {
-        // ===== CARA FRONTAL =====
-         0.0f,  0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.1f,  0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.5f,  0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
+        //Posicion x, y, z  || vector normal
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-         0.0f,  0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.5f,  0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.2f, -0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-         0.0f,  0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.2f, -0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.3f, -0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-         0.0f,  0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.3f, -0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.0f, -0.2f,  0.2f,   0.0f, 0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-         0.0f,  0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-         0.0f, -0.2f,  0.2f,   0.0f, 0.0f, 1.0f,
-        -0.3f, -0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-         0.0f,  0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-        -0.3f, -0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-        -0.2f, -0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
-
-         0.0f,  0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-        -0.2f, -0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
-        -0.5f,  0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
-
-         0.0f,  0.5f,  0.2f,   0.0f, 0.0f, 1.0f,
-        -0.5f,  0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
-        -0.1f,  0.1f,  0.2f,   0.0f, 0.0f, 1.0f,
-
-        // ===== CARA TRASERA =====
-        // mismas posiciones pero z negativo
-         0.0f,  0.5f, -0.2f,   0.0f, 0.0f, -1.0f,
-         0.1f,  0.1f, -0.2f,   0.0f, 0.0f, -1.0f,
-         0.5f,  0.1f, -0.2f,   0.0f, 0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
-    //float vertices[] = {
-    //    //Posicion x, y, z  || vector normal
-    //    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    //     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    //     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    //     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    //    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    //    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-    //    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    //     0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    //     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    //     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    //    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-    //    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-    //    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    //    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    //    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    //    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    //    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    //    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-    //     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-    //     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-    //     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-    //     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-    //     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-    //     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-    //    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-    //     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-    //     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    //     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    //    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    //    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-    //    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-    //     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-    //     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    //     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    //    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    //    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-    //};
 
     // First, set the container's VAO (and VBO)
     GLuint VBO, VAO;
@@ -235,6 +217,7 @@ int main()
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(image);
+    
 
 
     // Game loop
@@ -244,6 +227,16 @@ int main()
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        //Luz del Sol
+        lightPos.x = 0.0f; // Centrado respecto al modelo
+        lightPos.y = sin(angle) * radios; // Altura
+        lightPos.z = cos(angle) * radios; // Profundidad
+
+        // Luz Luna
+        lightPos2.x = 0.0f;
+        lightPos2.y = sin(angle + glm::radians(180.0f)) * radios;
+        lightPos2.z = cos(angle + glm::radians(180.0f)) * radios;
 
         // Check and call events
         glfwPollEvents();
@@ -260,54 +253,132 @@ int main()
         glUniform3f(lightPosLoc, lightPos.x + movelightPos, lightPos.y + movelightPos, lightPos.z + movelightPos);
         glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
-    //Nombre: Torres Martinez Victor Manuel
-    //Fecha 03/04/26
-    //Previo 8: Materiales e iluminacion
-
+        //Luz 1 Sol--------------------------------------------------------------------------
         // Set lights properties
-        glUniform3f(glGetUniformLocation(lightingShader.Program,"light.ambient"),0.5f,0.2f,0.8f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.6f, 0.8f, 0.2f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 0.5f, 0.1f, 0.9f);
-
+   
+        // Luz tipo sol
+        float intenSol = (lightPos.y > 0) ? 1.0f : 0.0f;
+        intenSol = 1.0f;
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"),0.3f* intenSol, 0.25f * intenSol, 0.2f * intenSol);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"),1.0f * intenSol, 0.6f * intenSol, 0.2f * intenSol);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"),1.0f * intenSol, 0.7f * intenSol, 0.3f * intenSol);
+        //Posicion al mover el sol
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.position"),lightPos.x,lightPos.y,lightPos.z);
 
         glm::mat4 view = camera.GetViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
         // Set material properties
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.5f, 0.3f, 0.3f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.8f, 0.6f, 0.2f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.3f, 0.5f, 0.9f);
-        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 0.9f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.1f, 0.1f, 0.1f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.9f, 0.9f, 0.9f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"),0.5f, 0.5f, 0.5f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"),64.0f);
+        
+        //Luz 2 Luna ----------------------------------------------------------------------------------
+        // Set lights properties
+        float intenLuna = (lightPos2.y > 0) ? 1.0f : 0.0f;
+        intenLuna = 1.0f;
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.ambient"), 0.05f* intenLuna, 0.05f * intenLuna, 0.1f * intenLuna);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.diffuse"), 0.2f * intenLuna, 0.2f * intenLuna, 0.4f * intenLuna);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.specular"), 0.5f * intenLuna, 0.5f * intenLuna, 0.7f * intenLuna);
+        //Posicion de la luna
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light2.position"), lightPos2.x, lightPos2.y, lightPos2.z);
 
-
+        // Set material properties
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material2.ambient"), 0.1f, 0.1f, 0.1f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material2.diffuse"), 0.9f, 0.9f, 0.9f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material2.specular"), 0.3f, 0.3f, 0.3f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "material2.shininess"), 10.0f);
 
         // Draw the loaded model
         glm::mat4 model(1);
-        model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         glBindVertexArray(VAO);
        
         //glDrawArrays(GL_TRIANGLES, 0, 36);
         
-        red_dog.Draw(lightingShader);
+        dog.Draw(lightingShader);
+        //Carga de escena
 
+        model = glm::translate(model, glm::vec3(-0.1f, -0.2f, 0.5f));
+        model = glm::rotate(model, 1.5708f, glm::vec3(-1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        cuchara.Draw(lightingShader);
+
+        model = glm::mat4(1.0f);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        model = glm::translate(model, glm::vec3(-0.3f, -0.18f, 0.8f));
+        model = glm::rotate(model, glm::radians(120.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::rotate(model, glm::radians(60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        sarten.Draw(lightingShader);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -0.36f, 0.8f));
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        fuego.Draw(lightingShader);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -0.15f, 0.8f));
+        model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        pes.Draw(lightingShader);
+        model = glm::translate(model, glm::vec3(-0.05f, 0.0f, 0.05f));
+        model = glm::rotate(model, glm::radians(-40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        pes.Draw(lightingShader);
+        model = glm::translate(model, glm::vec3(-0.05f, 0.0f, 0.05f));
+        model = glm::rotate(model, glm::radians(-40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        pes.Draw(lightingShader);
+
+        int size = 5;
+        float spacing = 1.95f;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                model = glm::mat4(1);
+                float x = (i - (size - 1) / 2.0f) * spacing;
+                float z = (j - (size - 1) / 2.0f) * spacing;
+
+                model = glm::translate(model, glm::vec3(x, -2.4f, z));
+
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+                pasto.Draw(lightingShader);
+                }
+        }
         glBindVertexArray(0);
 
-
-
-
+        //Dibujo de iluminacion-----------------------------------------------------
         lampshader.Use();
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos + movelightPos);
-        model = glm::scale(model, glm::vec3(0.8f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
 
+        if (intenSol > 0) {
+            glm::mat4 solModel = glm::mat4(1.0f);
+            solModel = glm::translate(solModel, lightPos);
+            solModel = glm::scale(solModel, glm::vec3(1.0f, 1.0f, 1.0f));
+
+            glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(solModel));
+            sol.Draw(lampshader);
+        }
+        if (intenLuna > 0) {
+        glm::mat4 lunaModel = glm::mat4(1.0f);
+        lunaModel = glm::translate(lunaModel, lightPos2);
+        lunaModel = glm::rotate(lunaModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        lunaModel = glm::scale(lunaModel, glm::vec3(0.7f, 0.7f, 0.7f));
+        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(lunaModel));
+        luna.Draw(lampshader);
+
+        }
         // Swap the buffers
         glfwSwapBuffers(window);
     }
@@ -343,7 +414,23 @@ void DoMovement()
     {
         camera.ProcessKeyboard(RIGHT, deltaTime);
     }
-
+    //Arriba
+    if (keys[GLFW_KEY_Q])
+    {
+        camera.ProcessKeyboard(UoP,deltaTime);
+    }
+    if (keys[GLFW_KEY_E])
+    {
+        camera.ProcessKeyboard(DOWN, deltaTime);
+    }
+    if (keys[GLFW_KEY_I])
+    {
+        angle += speed * deltaTime;
+    }
+    if (keys[GLFW_KEY_K])
+    {
+        angle -= speed * deltaTime;
+    }
     if (activanim)
     {
         if (rot > -90.0f)
@@ -383,6 +470,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
         
         movelightPos -= 0.1f;
     }
+
 
 }
 
