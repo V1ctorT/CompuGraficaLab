@@ -1,6 +1,6 @@
 //Nombre: Torres Martinez Victor Manuel
 //Fecha 10/04/26
-//Practica 8: Materiales e iluminacion
+//Practica 9: Fuentes de Luz
 
 // Std. Includes
 #include <string>
@@ -74,7 +74,7 @@ int main()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Materiales e Iluminacion Torres Martinez Victor Manuel", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Fuentes de Luz Torres Martinez Victor Manuel", nullptr, nullptr);
 
     if (nullptr == window)
     {
@@ -363,6 +363,8 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
         if (intenSol > 0) {
+            //glUniform3f(glGetUniformLocation(lampShader.Program, "lampColor"), 1.0f, 0.0f, 1.0f);
+            glUniform3f(glGetUniformLocation(lampshader.Program, "lampColor"),1.0f, 0.9f, 0.2f);
             glm::mat4 solModel = glm::mat4(1.0f);
             solModel = glm::translate(solModel, lightPos);
             solModel = glm::scale(solModel, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -371,12 +373,13 @@ int main()
             sol.Draw(lampshader);
         }
         if (intenLuna > 0) {
-        glm::mat4 lunaModel = glm::mat4(1.0f);
-        lunaModel = glm::translate(lunaModel, lightPos2);
-        lunaModel = glm::rotate(lunaModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        lunaModel = glm::scale(lunaModel, glm::vec3(0.7f, 0.7f, 0.7f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(lunaModel));
-        luna.Draw(lampshader);
+            glUniform3f(glGetUniformLocation(lampshader.Program, "lampColor"), 0.1f, 0.6f, 1.0f);
+            glm::mat4 lunaModel = glm::mat4(1.0f);
+            lunaModel = glm::translate(lunaModel, lightPos2);
+            lunaModel = glm::rotate(lunaModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            lunaModel = glm::scale(lunaModel, glm::vec3(0.7f, 0.7f, 0.7f));
+            glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(lunaModel));
+            luna.Draw(lampshader);
 
         }
         // Swap the buffers
