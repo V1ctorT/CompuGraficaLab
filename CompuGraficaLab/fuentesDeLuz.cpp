@@ -63,21 +63,21 @@ float moveLight = 0.0f;
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
-	glm::vec3(0.5f,0.0f, 0.0f),//Cambia
+	glm::vec3(0.5f,0.0f, 0.0f),//Fantasma
 	glm::vec3(0.0f, -0.16f, 0.8f),//Fogata
 	glm::vec3(4.0f,0.5f, -4.0f),//Antorcha
 	glm::vec3(-3.5f,0.8f, -1.5f)//Luciernaga
 };
 
 glm::vec3 colores[] = {
-	glm::vec3(0.9f,0.9f, 0.9f),//Fans
+	glm::vec3(0.9f,0.9f, 0.9f),//Fantasma
 	glm::vec3(1.0f, 0.1f, 0.25f),//Fogata
 	glm::vec3(1.0f, 0.9f, 0.5f),//Antorcha
 	glm::vec3(0.15f,0.85f, 1.9f)//Luciernaga
 };
 
 glm::vec3 escala[] = {
-	glm::vec3(0.1f),//Luz movible
+	glm::vec3(0.1f),//Fantasma
 	glm::vec3(0.1f),//Fogata
 	glm::vec3(0.35f),//antorcha
 	glm::vec3(0.05f),//Luciernaga
