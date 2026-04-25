@@ -1,6 +1,6 @@
 //Nombre: Torres Martinez Victor Manuel
-//Fecha 19/04/26
-//Previo 10: Animación Básica
+//Fecha 24/04/26
+//Practica 10: Animación Básica
 
 
 #include <iostream>
@@ -111,9 +111,12 @@ float vertices[] = {
 glm::vec3 Light1 = glm::vec3(0);
 //Anim
 float rotBall = 0;
+float rotDog = 0;
 bool AnimBall = false;
-
-
+bool AnimArr = false;
+bool AnimCir = false;
+bool inicioT = false;
+float timee = 0.0f;
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
@@ -293,31 +296,92 @@ int main()
 
 
 		glm::mat4 model(1);
+		glm::mat4 modelCentro(1);
 
-	
+		if (rotBall >= 360.0f || rotDog >= 360.0f) {
+			rotDog = 0.0f;
+			rotBall = 0.0f;
+		}
+
 		//Carga de modelo 
         view = camera.GetViewMatrix();	
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Piso.Draw(lightingShader);
 
-		model = glm::mat4(1);
+		/*model = glm::mat4(1);
+		modelCentro = model;
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
-		Dog.Draw(lightingShader);
+		model = glm::translate(model, glm::vec3(0.0f, alturaa, 0.0f));
+		model = glm::rotate(model, glm::radians(-rotDog), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Dog.Draw(lightingShader);*/
+
+		
+		if (AnimArr) {
+			model = glm::mat4(1);
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+			model = glm::rotate(model, glm::radians(-rotDog), glm::vec3(0.0f, 1.0f, 0.0f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			Dog.Draw(lightingShader);
+		}
+		else if (AnimCir) {
+			float highDog;
+
+			model = glm::mat4(1);
+			//modelCentro = model;
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+			//model = glm::translate(model, glm::vec3(1.0f,0.0f,1.0f));
+			//model = glm::rotate(model, glm::radians(-135.0f),glm::vec3(0.0f,1.0f,0.0f));
+			model = glm::rotate(model, glm::radians(-rotDog), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::translate(model, glm::vec3(1.8f, 0.0f, 1.8f));
+			model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			rotBall = fmod(rotBall, 360.0f);
+			float highSen = abs(sin(glm::radians(rotBall)));
+			highDog = abs((sin(timee)) / 2.0f);
+			if (
+				(rotBall >= 170.0f && rotBall <= 190.0f) ||
+				(rotBall >= 350.0f || rotBall >= 0.0f && rotBall <= 10.0f)
+				)
+			{
+				float angu = abs(sin(glfwGetTime()) * 90.0f);
+				model = glm::translate(model, glm::vec3(0.0f, highDog , 0.0f));
+				model = glm::rotate(model,glm::radians(angu),glm::vec3(1.0f,0.0f,0.0f));
+				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+				Dog.Draw(lightingShader);
+			}
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			Dog.Draw(lightingShader);
 
 
-		model = glm::mat4(1);
-		glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
-		model = glm::rotate(model, glm::radians(rotBall), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f,alturaa,0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	    Ball.Draw(lightingShader); 
-		glDisable(GL_BLEND);  //Desactiva el canal alfa 
-		glBindVertexArray(0);
+			model = glm::mat4(1);
+			glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
+			model = glm::rotate(model, glm::radians(rotBall), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::translate(model, glm::vec3(1.5f, highSen + 0.2f, 1.5f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			Ball.Draw(lightingShader);
+			
+			glDisable(GL_BLEND);  //Desactiva el canal alfa 
+
+		}
+
+		//model = glm::mat4(1);
+		//glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
+		//model = glm::rotate(model, glm::radians(rotBall), glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::translate(model, glm::vec3(0.0f,alturaa,0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	 //   Ball.Draw(lightingShader); 
+		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
+		//glBindVertexArray(0);
 	
 		// Also draw the lamp object, again binding the appropriate shader
 		lampShader.Use();
@@ -459,10 +523,18 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
 		}
 	}
-	if (keys[GLFW_KEY_N] || keys[GLFW_KEY_M])
+	if (keys[GLFW_KEY_N])
 	{
 		AnimBall = !AnimBall;
 		
+	}
+	if (keys[GLFW_KEY_M])
+	{
+		AnimArr = !AnimArr;
+	}
+	if (keys[GLFW_KEY_P])
+	{
+		AnimCir = !AnimCir;
 	}
 }
 void Animation() {
@@ -471,7 +543,7 @@ void Animation() {
 		rotBall += 0.2f;
 		//printf("%f", rotBall);
 	}
-	else
+	if (AnimArr)
 	{
 		rotBall = 0.0f;
 		//printf("%f", alturaa);
@@ -481,6 +553,18 @@ void Animation() {
 		if (foco) {
 			alturaa -= 0.007f;
 		}
+	}
+	if (AnimCir)
+	{
+		rotDog += 0.02f;
+		rotBall += 0.02f;
+		timee += 0.00002f;
+	}
+	else
+	{
+		AnimArr = false;
+		AnimBall = false;
+		AnimCir = false;
 	}
 }
 
