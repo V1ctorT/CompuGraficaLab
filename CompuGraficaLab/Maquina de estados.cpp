@@ -1,6 +1,6 @@
 //Nombre: Torres Martinez Victor Manuel
-//Fecha: 26 de Abril del 2029
-//Previo 11: Animacion por maquinas de estado
+//Fecha: 28 de Abril del 2029
+//Practica 11: Animacion por maquinas de estado
 
 #include <iostream>
 #include <cmath>
@@ -112,11 +112,15 @@ int dogAnim = 0;
 float FLegs = 0.0f;
 float RLegs = 0.0f;
 float head = 0.0f;
+float headY = 0.0f;
+float tempY = 0.0f;
 float tail = 0.0f;
 glm::vec3 dogPos (0.0f,0.0f,0.0f);
 float dogRot = 0.0f;
 bool step = false;
-
+int zzz = 0;
+int xx = 0;
+float angulo = 0.0f;
 
 
 // Deltatime
@@ -318,6 +322,7 @@ int main()
 		model = modelTemp;
 		model = glm::translate(model, glm::vec3(0.0f, 0.093f, 0.208f));
 		model = glm::rotate(model, glm::radians(head), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(headY), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		HeadDog.Draw(lightingShader);
 		//Tail 
@@ -516,10 +521,12 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 	if (keys[GLFW_KEY_B])
 	{
 		dogAnim = 1;
+		zzz = 1;
 	}
 	
 }
 void Animation() {
+	
 	if (AnimBall)
 	{
 		rotBall += 0.4f;
@@ -531,13 +538,14 @@ void Animation() {
 		rotDog -= 0.6f;
 		//printf("%f", rotBall);
 	}
-	//Nombre: Torres Martinez Victor Manuel
-//Fecha: 26 de Abril del 2029
-//Previo 11: Animacion por maquinas de estado
+//Nombre: Torres Martinez Victor Manuel
+//Fecha: 27 de Abril del 2029
+//Practica 11: Animacion por maquinas de estado
 
 	if (dogAnim == 1)	//CAminar
 	{
-		if (!step) {	//Estado 1
+
+		if (!step) {	//Estado 1 - Caminar 
 			RLegs += 0.02f;
 			FLegs += 0.02f;
 			head += 0.02f;
@@ -546,7 +554,6 @@ void Animation() {
 				step = true;
 			}
 			//printf(" Ang %f", RLegs);
-
 		}
 		else
 		{
@@ -558,13 +565,105 @@ void Animation() {
 				step = false;
 			}
 		}
-		dogPos.z += 0.0008;
-		if (dogPos.z > 2.54) {
-			dogPos.z = -2.54f;
+		if (dogPos.z >= 2.0f && angulo <= 1.5708f) { //Giro 1 90°
+			tempY += 0.0288;
+			if (tempY >= 0.0f && tempY < 45.0f) headY -= 0.02f;
+			if (tempY > 45.0f && tempY <= 185.0f) headY += 0.02f;
+			zzz = 0;
+			float centroX = -0.54;
+			float centroZ = 2.0f;
+			float radio = 0.54f;
+			angulo += 0.0005;
+			dogPos.x = centroX + (radio * cos(angulo));
+			dogPos.z = centroZ + (radio * sin(angulo));
+			dogRot -= 0.0288;
+			if (dogPos.z >= 2.54f) {
+				xx = -1;
+				tempY = 0.0f;
+				headY = 0.0f;
+			}
 		}
-		printf(" \nPos %f", dogPos.z);
+		if (dogPos.x <= -2.0f && angulo <= 3.1416f) //Giro 2 90
+		{
+			tempY += 0.0288;
+			if (tempY >= 0.0f && tempY < 45.0f) headY -= 0.02f;
+			if (tempY > 45.0f && tempY <= 185.0f) headY += 0.02f;
+			xx = 0;
+			float centroX = -2.0f;
+			float centroZ = 2.0f;
+			float radio = 0.54f;
+			angulo += 0.0005;
+			dogPos.x = centroX + (radio * cos(angulo));
+			dogPos.z = centroZ + (radio * sin(angulo));
+			dogRot -= 0.0288;
+			if (dogPos.x <= -2.5) {
+				xx = 0;
+				zzz = -1;
+				headY = 0.0f;
+				tempY = 0.0f;
+			}
+		}
+		if (dogPos.z <= -2.0f && angulo <= 4.7124f) //Giro 3 90
+		{
+			tempY += 0.0288;
+			if (tempY >= 0.0f && tempY < 45.0f) headY -= 0.02f;
+			if (tempY > 45.0f && tempY <= 185.0f) headY += 0.02f;
+			zzz = 0;
+			float centroX = -2.0f;
+			float centroZ = -2.0f;
+			float radio = 0.54f;
+			angulo += 0.0005;
+			dogPos.x = centroX + (radio * cos(angulo));
+			dogPos.z = centroZ + (radio * sin(angulo));
+			dogRot -= 0.0286;
+			if (dogPos.z <= -2.5) {
+				xx = 1;
+				zzz = 0;
+				headY = 0.0f;
+				tempY = 0.0f;
+			}
+		}
+		if (dogPos.x >= 2.0f && angulo <= 6.8068) //Giro 4 120
+		{
+			float centroX = 2.0f;
+			float centroZ = -2.0f;
+			float radio = 0.54f;
+			angulo += 0.0005;
+			dogPos.x = centroX + (radio * cos(angulo));
+			dogPos.z = centroZ + (radio * sin(angulo));
+			dogRot -= 0.0286;
+			if (dogPos.x >= 2.5) {
+				xx = -1;
+				zzz = 1;
+			}
+		}
+		if (dogPos.x <= 0.0 && xx == -1 && zzz == 1 && angulo >= 5.7596) //Giro 5
+		{
+			dogRot += 0.034;
+			dogPos.x = 0.0f;
+			dogPos.y = 0.0f;
+			if (dogRot >= -360.0f) {
+				//dogPos.x = 0.0f;
+				dogRot = 0.0f;
+				xx = 0;
+				zzz = 1;
+				angulo = 0.0f;
+			}
+		}
+		if(zzz == 1){ dogPos.z += 0.0008; } //Caminar a Z+
+		if (zzz == -1) { dogPos.z -= 0.0008; } //Caminar a Z-
+		if (xx == 1) { dogPos.x += 0.0008; } //Caminar a X+
+		if (xx == -1) { dogPos.x -= 0.0008; } //Caminar a X-
 
-	}
+		//angulo = 0.0f;
+		printf(" \nPos Z%f", dogPos.z);
+		printf(" \tPos X%f", dogPos.x);
+		//printf(" \tXX: %d", xx);
+		//printf(" \tZZZ: %d", zzz);
+		printf(" \tAngulo: %f", angulo);
+		printf(" \theadY: %f", headY);
+		printf(" \ttempY: %f", tempY);
+		}
 	
 }
 
