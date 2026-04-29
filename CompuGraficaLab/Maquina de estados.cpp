@@ -538,9 +538,6 @@ void Animation() {
 		rotDog -= 0.6f;
 		//printf("%f", rotBall);
 	}
-//Nombre: Torres Martinez Victor Manuel
-//Fecha: 27 de Abril del 2029
-//Practica 11: Animacion por maquinas de estado
 
 	if (dogAnim == 1)	//CAminar
 	{
